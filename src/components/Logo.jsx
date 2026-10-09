@@ -1,0 +1,1 @@
+export default function Logo() { return <a className="logo" href="/" aria-label="Roann Sourcing home"><svg viewBox="0 0 64 48" aria-hidden="true"><path d="M13 5h31q17 0 12 15-3 8-15 10l15 14H40L25 28 17 44H3L20 14h14L27 25h13q7 0 8-5 2-5-6-5H8z" fill="currentColor"/></svg><span className="logo-text">ROANN<small>SOURCING</small></span></a>; }
