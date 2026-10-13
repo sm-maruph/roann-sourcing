@@ -40,8 +40,24 @@ export default function About() {
 
     <section className="about-company about-section" id="our-company">
       <div className="container about-content-grid">
-        <div className="section-copy"><p className="eyebrow">Our Company</p><h2>Your Trusted Apparel<br/>Sourcing Partner</h2><p>ROANN SOURCING is a global apparel sourcing company connecting international brands with reliable manufacturing partners. We deliver high-quality products, ethical production and tailored solutions — from concept to delivery.</p><LinkButton href="#mission">Learn More</LinkButton></div>
+        <div className="section-copy"><p className="eyebrow">Our Company</p><h2>Your Appairal sourcing partner</h2><p>ROANN SOURCING is a global apparel sourcing company connecting international brands with reliable manufacturing partners. We deliver high-quality products, ethical production and tailored solutions — from concept to delivery.</p><LinkButton href="#mission">Learn More</LinkButton></div>
         <AboutGallery images={[images.sewing, images.apparel]} statement={['People', 'Products', 'Partnerships', 'A stronger', 'tomorrow']}/>
+      </div>
+    </section>
+
+    <section className="about-ceo" aria-labelledby="ceo-message-title">
+      <div className="container">
+        <h2 id="ceo-message-title">Message from<span>CEO</span></h2>
+        <div className="ceo-portrait-placeholder" role="img" aria-label="Portrait placeholder for Nazim Akter">NA</div>
+        <figure className="ceo-message">
+          <figcaption>Nazim Akter<span className="ceo-role">CEO, Roann Sourcing</span></figcaption>
+          <blockquote><p>“Every garment carries a promise—to the brand that imagines it, the people who make it, and the person who wears it. At Roann Sourcing, we honor that promise, from the first conversation to the final stitch.”</p></blockquote>
+        </figure>
+        <address className="ceo-contact">
+          <p>House: 42 (2nd Floor), Road: 17, Sector: 13.<br/>Uttara, Dhaka-1230, Bangladesh.</p>
+          <a href="mailto:nazim@roannsourcing.com">nazim@roannsourcing.com</a>
+          <a href="tel:+8801711370097">+880 1711-370097</a>
+        </address>
       </div>
     </section>
 
@@ -74,7 +90,7 @@ export default function About() {
 
     <section className="about-values" aria-labelledby="values-title"><div className="container"><h2 className="eyebrow" id="values-title">Our Values</h2><div className="values-list">{values.map(({icon: Icon, title, description}) => <article key={title}><Icon size={31} strokeWidth={1.4}/><h3>{title}</h3><p>{description}</p></article>)}</div></div></section>
 
-    <section className="about-compliance about-section" id="compliance"><div className="container compliance-grid"><div className="section-copy"><p className="eyebrow">Compliance & Certifications</p><h2>Trusted and Responsible Manufacturing</h2><p>We work with manufacturing partners who share our commitment to quality, social responsibility and environmental practices.</p><LinkButton outline onClick={() => setDetails('compliance')}>Learn More</LinkButton></div><div className="certification-list" aria-label="Manufacturing standards and compliance frameworks">{standards.map(({name, className, caption}) => <div className={`certification ${className}`} key={name}><strong>{name}</strong><span>{caption}</span></div>)}</div></div></section>
+    <section className="about-compliance about-section" id="compliance"><div className="container compliance-grid"><div className="section-copy"><p className="eyebrow">Compliance & Certifications</p><h2>Trusted and Responsible Manufacturing</h2><p>We work with manufacturing partners who share our commitment to quality, social responsibility and environmental practices.</p><LinkButton href="/compliance" outline>Learn More</LinkButton></div><div className="certification-list" aria-label="Manufacturing standards and compliance frameworks">{standards.map(({name, className, caption}) => <div className={`certification ${className}`} key={name}><strong>{name}</strong><span>{caption}</span></div>)}</div></div></section>
 
     <section className="contact-banner about-contact" id="contact"><div className="container"><p className="eyebrow">Let’s Work Together</p><h2>Build Something Greater Together</h2><p>Partner with ROANN SOURCING for reliable, innovative and responsible apparel sourcing solutions.</p><LinkButton href="mailto:info@roann-sourcing.com">Contact Us</LinkButton></div></section>
     <a className="about-back-top" href="#about-top" aria-label="Back to top"><ArrowUp size={18}/></a>
