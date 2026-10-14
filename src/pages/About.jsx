@@ -1,3 +1,4 @@
+import LocalizedNumber from '../components/LocalizedNumber';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Target, Eye, X, ArrowUp } from 'lucide-react';
 import AboutGallery from '../components/AboutGallery';
@@ -40,7 +41,7 @@ export default function About() {
 
     <section className="about-company about-section" id="our-company">
       <div className="container about-content-grid">
-        <div className="section-copy"><p className="eyebrow">Our Company</p><h2>Your Appairal sourcing partner</h2><p>ROANN SOURCING is a global apparel sourcing company connecting international brands with reliable manufacturing partners. We deliver high-quality products, ethical production and tailored solutions — from concept to delivery.</p><LinkButton href="#mission">Learn More</LinkButton></div>
+        <div className="section-copy"><p className="eyebrow">Our Company</p><h2>Your apparel sourcing partner</h2><p>ROANN SOURCING is a global apparel sourcing company connecting international brands with reliable manufacturing partners. We deliver high-quality products, ethical production and tailored solutions — from concept to delivery.</p><LinkButton href="#mission">Learn More</LinkButton></div>
         <AboutGallery images={[images.sewing, images.apparel]} statement={['People', 'Products', 'Partnerships', 'A stronger', 'tomorrow']}/>
       </div>
     </section>
@@ -81,7 +82,7 @@ export default function About() {
     </section>
 
     <section className="about-reach" id="global-reach">
-      <div className="container"><WorldMap/><div className="reach-copy"><p className="eyebrow">Global Reach</p><h2>A Truly Global Sourcing Network</h2><p>We work with a trusted network of manufacturing partners across key sourcing regions, helping brands bring their ideas to life with reliability, efficiency and transparency.</p></div><div className="stats">{[['15+', 'Years Experience'], ['100+', 'Global Clients'], ['500+', 'Products Developed'], ['12+', 'Sourcing Regions']].map(([number, label]) => <div key={label}><strong>{number}</strong><span>{label}</span></div>)}</div></div>
+      <div className="container"><WorldMap/><div className="reach-copy"><p className="eyebrow">Global Reach</p><h2>A Truly Global Sourcing Network</h2><p>We work with a trusted network of manufacturing partners across key sourcing regions, helping brands bring their ideas to life with reliability, efficiency and transparency.</p></div><div className="stats">{[['15+', 'Years Experience'], ['100+', 'Global Clients'], ['500+', 'Products Developed'], ['12+', 'Sourcing Regions']].map(([number, label]) => <div key={label}><strong><LocalizedNumber value={parseInt(number, 10)} plus/></strong><span>{label}</span></div>)}</div></div>
     </section>
 
     <section className="about-people about-section" id="our-people">

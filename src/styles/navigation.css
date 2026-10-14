@@ -1,4 +1,10 @@
 .nav-category { position: relative; }
+.language-selector { display: flex; align-items: center; gap: 6px; flex-shrink: 0; font-size: 12px; }
+.language-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.language-selector select { font: inherit; color: inherit; background: #111; border: 1px solid #555; border-radius: 4px; padding: 8px 4px; max-width: 100px; cursor: pointer; }
+.language-selector select:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+@media (min-width: 801px) { .header-inner { gap: 14px; } .navigation { gap: 16px; } }
+@media (max-width: 560px) { .header-inner { gap: 6px; } .header-inner .logo { width: 125px; margin-right: auto; } .language-selector { gap: 3px; } .language-selector > svg { display: none; } .language-selector select { max-width: 85px; font-size: 11px; } }
 .nav-category-heading { display: flex; align-items: center; gap: 4px; }
 .nav-category-heading > a { position: relative; padding: 15px 0; white-space: nowrap; }
 .nav-category-heading > a:hover { color: var(--red); }
@@ -7,12 +13,22 @@
 .nav-subcategories a { display: block; padding: 11px 12px; white-space: nowrap; font-size: 13px; }
 .nav-subcategories a:hover, .nav-subcategories a:focus-visible { background: #222; color: var(--red); }
 .nav-category.is-expanded > .nav-subcategories { display: block; }
-@media (min-width: 801px) {
+@media (max-width: 1200px) {
+  .header-inner .logo { margin-right: auto; }
+  .header-inner .search-toggle { margin-left: 0; }
+  .header .navigation { display: none; position: absolute; left: 0; right: 0; top: 100%; background: #111; padding: 20px 6%; border-top: 1px solid #333; box-shadow: 0 15px 25px #0006; }
+  .header .navigation.is-open { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
+  .header .navigation > a:not(.button) { padding: 12px 0; font-size: 14px; }
+  .header .navigation .active:after { display: none; }
+  .header .navigation .button { margin-top: 10px; }
+  .header .menu-toggle { display: flex; }
+}
+@media (min-width: 1201px) {
   .nav-category:hover > .nav-subcategories { display: block; }
   .nav-category:has(.nav-category-heading > a:focus-visible) > .nav-subcategories,
   .nav-category:has(.nav-subcategories a:focus-visible) > .nav-subcategories { display: block; }
 }
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
   .nav-category-heading { justify-content: space-between; }
   .nav-category-heading > a { flex: 1; padding: 12px 0; font-size: 14px; }
   .nav-category-toggle { width: 40px; height: 40px; }
