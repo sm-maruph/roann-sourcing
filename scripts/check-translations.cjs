@@ -25,16 +25,16 @@ const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173';
           const heading = locale === 'en' ? 'Your apparel sourcing partner' : dictionary['Your apparel sourcing partner'];
           assert.equal(await page.getByRole('heading', { name: heading, exact: true }).count(), 1, 'Apparel heading is correctly translated');
           assert.ok(!(await page.locator('main').innerText()).includes('Appairal'), 'Misspelling never appears in translated content');
-          assert.equal(await page.locator('.stats strong').first().textContent(), locale === 'ja' ? '十五以上' : '15+', 'Statistics use localized numbers');
+          assert.equal(await page.locator('.stats strong').first().textContent(), locale === 'ja' ? '二十二以上' : '22+', 'Statistics use localized numbers');
           if (route === '/') assert.equal(await page.locator('.step-number').first().textContent(), locale === 'ja' ? '一' : '01', 'Process steps use localized numbers');
         }
         if (locale !== 'en') assert.ok(!(await page.locator('main').innerText()).includes('Your next collection starts here.'));
       }
       await page.goto(base + '/girls');
       assert.equal(await page.locator('.language-selector select').inputValue(), locale, 'Preference persists between pages');
-      const filter = page.locator('.girls-dropdowns select').first();
-      await filter.selectOption('Graphic');
-      assert.equal(await page.locator('.mens-product-card').count(), 1, 'Translated option retains the filter value');
+      const filter = page.locator('.catalog-sidebar input[id="catalog-Fabric-Cotton-Jersey"]');
+      await filter.check();
+      assert.equal(await page.locator('.mens-product-card').count(), 2, 'Translated fabric option retains the filter value');
       await page.locator('.mens-product-image').first().click();
       await page.locator('input[name="name"]').fill('Test Buyer');
       await page.locator('textarea[name="message"]').fill('My custom requirement');

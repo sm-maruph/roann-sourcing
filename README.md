@@ -28,17 +28,19 @@ npm run preview
 - `src/styles/` — global and responsive styles
 - `public/images/` — locally stored photography
 
-## Pages
+## Live website content
 
-- `/` — homepage
-- `/about` — About Us, with mission, vision, story, strengths, global reach, people, values, and compliance sections
-- `/products` — product families, six apparel services, sourcing strengths, and enquiry links. Category cards, the category picker, and service cards open keyboard-accessible detail dialogs.
-- `/mens` — men’s catalog with 40 sample styles across T-shirts, denim, trousers, sweaters, and boxers. Link directly to a category with `/mens?category=denim` (other values: `t-shirts`, `trousers`, `sweaters`, `boxers`). Filters combine choices within a group and narrow results across groups; sorting and mobile filter drawers are supported. Quote forms validate input and prepare a draft in the visitor’s email app; no backend submission occurs.
-- `/womens` — women’s catalog with 20 sample styles across T-shirts, leggings, sweaters, and lingerie. Category links use `/womens?category=leggings` (other values: `t-shirts`, `sweaters`, `lingerie`). Uses the shared catalog filtering, sorting, history, and email-quote workflow, with a distinct layout based on the women’s reference. Sample data lives in `src/data/womens.js`; original product illustrations are rendered by `WomensGarmentPreview` and `GarmentPreview`. Configure the SPA fallback for this route too.
-- `/girls` — girls’ catalog with 18 sample styles across T-shirts, denim, and sweaters (`?category=t-shirts`, `denim`, or `sweaters`). Includes style, fabric, color, and age-group dropdowns, interactive color swatches, and category-specific sourcing banners. Selected colors are included in the email quote draft. Sample data lives in `src/data/girls.js`; product cards use original garment illustrations. Configure the SPA fallback for `/girls` as well.
+Run the backend as well as Vite. The dev proxy forwards `/api` and `/media` to port 4000. In production the Express backend serves `frontend/dist`; use a single origin or proxy those paths to the backend.
 
-Men’s catalog content lives in `src/data/mens.js`. Product artwork is original SVG sample illustration in `src/components/GarmentPreview.jsx`, with illustrative stock photos in the category banners. Replace sample specifications and artwork with approved product data and photography before using this as a live catalog. Configure hosting with the same SPA fallback for `/mens`.
+- `/admin/login`: custom administrator sign in; manage page banners, products, categories/subcategories, partner logos, uploads and quote requests.
+- `/mens`, `/womens`, `/girls`: read active products and categories from the database, including subcategory filters. Product quote forms submit to the backend inbox.
+- `/contact`: submits enquiries directly to the backend inbox.
+- `/`: reads the homepage banner and partner logos from the backend.
+- `/about`, `/compliance`: read their banner images from the backend; other editorial content remains local.
+- `/products`, `/kids`: local product family and sourcing information.
 
-The shared navigation connects all three pages. Production hosting should serve `index.html` for `/about` and `/products` (SPA fallback). Product links and search results lead to the corresponding category on `/products`. The pages use illustrative Pexels and Unsplash photography. Team details and compliance enquiries open keyboard-accessible dialogs; email links use the configured contact address. Certification marks are visual reference placeholders and should be replaced with verified partner documentation and approved assets before publication.
+Set up the database and storage using [the backend instructions](../backend/README.md). A complete fresh-project SQL installer is at `../backend/supabase/setup.sql`. The custom user table is `admin_users`; Supabase Auth is not required.
 
-Product cards open accessible native dialogs. Navigation links scroll to sections, search filters the product collections, and contact links open an email enquiry. The contact email, location, statistics, and partner names are reference content and should be confirmed before launch. Photography is illustrative Unsplash imagery; replace with your own production assets for an exact visual match. The logo and world map are vector approximations of the supplied reference.
+The static catalog files in `src/data` are starter seed sources, not the live catalog. Database changes appear on page refresh. Product images render uploaded photography; products without images retain the existing sample illustrations. Keep the frontend `/images/` assets deployed for starter images and editorial sections.
+
+Build with `npm run build`. Production hosting must provide an SPA fallback for public routes and `/admin/login`. Quote submission requires the API and reports success only after the request is saved. Other direct email links still open the visitor's email app.

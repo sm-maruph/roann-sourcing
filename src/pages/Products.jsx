@@ -7,7 +7,7 @@ import WorldMap from '../components/WorldMap';
 import '../styles/products.css';
 
 const benefits = [[Boxes, 'Wide Product Range'], [ShieldCheck, 'Custom Sourcing'], [Leaf, 'Sustainable Options'], [UsersRound, 'Global Supply Chain'], [ShieldCheck, 'Quality Assurance']];
-const statistics = [[UsersRound, '15+', 'Years Experience'], [Globe2, '100+', 'Global Clients'], [Package, '500+', 'Products Developed'], [ShieldCheck, '12+', 'Sourcing Regions']];
+const statistics = [[UsersRound, '22+', 'Years Experience'], [Globe2, '30+', 'Global Clients'], [Package, '1000+', 'Products Developed'], [ShieldCheck, '7+', 'Sourcing Regions']];
 
 function Action({ children, href, outline = false, onClick, className = '' }) {
   const styles = `button${outline ? ' button-outline' : ''} ${className}`;

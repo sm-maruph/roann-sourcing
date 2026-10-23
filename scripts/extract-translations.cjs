@@ -24,7 +24,7 @@ function visit(node) {
 }
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (entry.name === 'i18n') continue;
+    if (['i18n', 'admin'].includes(entry.name)) continue;
     const file = path.join(directory, entry.name);
     if (entry.isDirectory()) walk(file);
     else if (/\.(jsx|js)$/.test(file)) visit(parse(fs.readFileSync(file, 'utf8'), { sourceType: 'module', plugins: ['jsx'] }));

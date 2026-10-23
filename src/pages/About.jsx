@@ -1,9 +1,10 @@
+import { usePublicData } from '../api/public';
 import LocalizedNumber from '../components/LocalizedNumber';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Target, Eye, X, ArrowUp } from 'lucide-react';
 import AboutGallery from '../components/AboutGallery';
 import WorldMap from '../components/WorldMap';
-import { strengths, values, standards } from '../data/about';
+import { strengths, values } from '../data/about';
 import '../styles/about.css';
 
 const images = {
@@ -20,6 +21,8 @@ function LinkButton({ href, children, outline = false, onClick }) {
 }
 
 export default function About() {
+  const { data: content } = usePublicData('content');
+  const hero = content?.heroes.find(item => item.page === 'about');
   const [details, setDetails] = useState(null);
   const dialog = useRef(null);
   useEffect(() => {
@@ -29,7 +32,7 @@ export default function About() {
   useEffect(() => { if (details) dialog.current?.showModal(); }, [details]);
 
   return <div className="about-page">
-    <section className="about-hero" id="about-top" aria-labelledby="about-title">
+    <section style={hero?.image_url ? { '--about-hero-image': `url("${hero.image_url}")` } : undefined} className="about-hero" id="about-top" aria-labelledby="about-title">
       <div className="container">
         <p className="eyebrow">About Roann Sourcing</p>
         <h1 id="about-title">About Us</h1>
@@ -49,7 +52,7 @@ export default function About() {
     <section className="about-ceo" aria-labelledby="ceo-message-title">
       <div className="container">
         <h2 id="ceo-message-title">Message from<span>CEO</span></h2>
-        <div className="ceo-portrait-placeholder" role="img" aria-label="Portrait placeholder for Nazim Akter">NA</div>
+        <img className="ceo-portrait" src="/images/CEO_RS.jpeg" alt="Nazim Akter, CEO of Roann Sourcing" width="446" height="644" loading="lazy"/>
         <figure className="ceo-message">
           <figcaption>Nazim Akter<span className="ceo-role">CEO, Roann Sourcing</span></figcaption>
           <blockquote><p>“Every garment carries a promise—to the brand that imagines it, the people who make it, and the person who wears it. At Roann Sourcing, we honor that promise, from the first conversation to the final stitch.”</p></blockquote>
@@ -82,7 +85,7 @@ export default function About() {
     </section>
 
     <section className="about-reach" id="global-reach">
-      <div className="container"><WorldMap/><div className="reach-copy"><p className="eyebrow">Global Reach</p><h2>A Truly Global Sourcing Network</h2><p>We work with a trusted network of manufacturing partners across key sourcing regions, helping brands bring their ideas to life with reliability, efficiency and transparency.</p></div><div className="stats">{[['15+', 'Years Experience'], ['100+', 'Global Clients'], ['500+', 'Products Developed'], ['12+', 'Sourcing Regions']].map(([number, label]) => <div key={label}><strong><LocalizedNumber value={parseInt(number, 10)} plus/></strong><span>{label}</span></div>)}</div></div>
+      <div className="container"><WorldMap/><div className="reach-copy"><p className="eyebrow">Global Reach</p><h2>A Truly Global Sourcing Network</h2><p>We work with a trusted network of manufacturing partners across key sourcing regions, helping brands bring their ideas to life with reliability, efficiency and transparency.</p></div><div className="stats">{[['22+', 'Years Experience'], ['30+', 'Global Clients'], ['1000+', 'Products Developed'], ['7+', 'Sourcing Regions']].map(([number, label]) => <div key={label}><strong><LocalizedNumber value={parseInt(number, 10)} plus/></strong><span>{label}</span></div>)}</div></div>
     </section>
 
     <section className="about-people about-section" id="our-people">
@@ -91,9 +94,8 @@ export default function About() {
 
     <section className="about-values" aria-labelledby="values-title"><div className="container"><h2 className="eyebrow" id="values-title">Our Values</h2><div className="values-list">{values.map(({icon: Icon, title, description}) => <article key={title}><Icon size={31} strokeWidth={1.4}/><h3>{title}</h3><p>{description}</p></article>)}</div></div></section>
 
-    <section className="about-compliance about-section" id="compliance"><div className="container compliance-grid"><div className="section-copy"><p className="eyebrow">Compliance & Certifications</p><h2>Trusted and Responsible Manufacturing</h2><p>We work with manufacturing partners who share our commitment to quality, social responsibility and environmental practices.</p><LinkButton href="/compliance" outline>Learn More</LinkButton></div><div className="certification-list" aria-label="Manufacturing standards and compliance frameworks">{standards.map(({name, className, caption}) => <div className={`certification ${className}`} key={name}><strong>{name}</strong><span>{caption}</span></div>)}</div></div></section>
 
-    <section className="contact-banner about-contact" id="contact"><div className="container"><p className="eyebrow">Let’s Work Together</p><h2>Build Something Greater Together</h2><p>Partner with ROANN SOURCING for reliable, innovative and responsible apparel sourcing solutions.</p><LinkButton href="mailto:info@roann-sourcing.com">Contact Us</LinkButton></div></section>
+    <section className="contact-banner about-contact" id="contact"><div className="container"><p className="eyebrow">Let’s Work Together</p><h2>Build Something Greater Together</h2><p>Partner with ROANN SOURCING for reliable, innovative and responsible apparel sourcing solutions.</p><LinkButton href="/contact">Contact Us</LinkButton></div></section>
     <a className="about-back-top" href="#about-top" aria-label="Back to top"><ArrowUp size={18}/></a>
 
     <dialog className="about-dialog" ref={dialog} aria-labelledby="about-dialog-title" onClose={() => setDetails(null)} onClick={event => { if (event.target === event.currentTarget) dialog.current.close(); }}><button className="icon-button dialog-close" aria-label="Close details" onClick={() => dialog.current.close()}><X/></button>{details === 'team' ? <><p className="eyebrow">Our People & Partners</p><h2 id="about-dialog-title">Let’s meet your sourcing team</h2><p>Great collections start with a conversation. Connect with us to discuss product development, manufacturing partnerships, quality assurance and your next apparel collection.</p><LinkButton href="mailto:info@roann-sourcing.com?subject=Meet%20the%20Roann%20Sourcing%20team">Introduce Yourself</LinkButton></> : <><p className="eyebrow">Responsible Manufacturing</p><h2 id="about-dialog-title">Confidence at every stage</h2><p>Quality control, responsible working conditions and environmental practices are central to our approach to sourcing.</p><p>Certification requirements and documentation depend on the manufacturing partner and product. Contact our team to discuss the standards your collection needs and request supporting documentation.</p><LinkButton href="mailto:info@roann-sourcing.com?subject=Manufacturing%20compliance%20enquiry">Discuss Your Requirements</LinkButton></>}</dialog>

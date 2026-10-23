@@ -1,0 +1,30 @@
+.mens-page .catalog-layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 35px; }
+.mens-page .catalog-sidebar { display: block; }
+.mens-page .catalog-main { min-width: 0; }
+.mens-page .catalog-toolbar { display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 12px; }
+.mens-page .mobile-filter-button { display: none; }
+.mens-page .catalog-sort { margin: 0 0 0 auto; order: 1; }
+.catalog-page-size { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #555; }
+.catalog-page-size select { padding: 8px; border: 1px solid #ddd; color: #333; background: #fff; font: inherit; }
+.catalog-pagination { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.catalog-pagination button { border: 1px solid #ddd; background: #fff; color: #333; min-width: 36px; min-height: 38px; padding: 8px 12px; font: inherit; font-size: 12px; }
+.catalog-pagination button[aria-current="page"] { background: var(--red); border-color: var(--red); color: #fff; }
+.catalog-pagination button:disabled { opacity: .4; cursor: default; }
+.catalog-pagination button:hover:not(:disabled):not([aria-current]) { border-color: var(--red); }
+.catalog-page-numbers, .catalog-page-numbers > span { display: flex; align-items: center; gap: 6px; }
+.pagination-gap { padding: 0 4px; }
+.catalog-page-size select:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+@media (min-width: 801px) and (max-width: 1100px) {
+  .mens-page .catalog-layout { grid-template-columns: 150px minmax(0, 1fr); gap: 22px; }
+  .mens-page .mens-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+  .mens-page .catalog-layout { display: block; }
+  .mens-page .catalog-sidebar { display: none; }
+  .mens-page .mobile-filter-button { display: flex; order: 0; }
+  .mens-page .catalog-sort { width: auto; align-self: auto; }
+  .catalog-page-size { flex: 1 0 100%; }
+  .catalog-pagination { gap: 6px; }
+  .catalog-pagination button { font-size: 11px; padding: 8px; min-width: 32px; }
+  .catalog-page-numbers, .catalog-page-numbers > span { gap: 3px; }
+}

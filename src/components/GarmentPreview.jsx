@@ -3,6 +3,7 @@ import { useId } from 'react';
 // Original flat-lay garment illustrations keep sample styles distinct until catalog photography is supplied.
 export default function GarmentPreview({ product }) {
   const id = useId().replaceAll(':', '');
+  if (product.image) return <img className="garment-preview product-photo" src={product.image} alt={product.name} loading="lazy"/>;
   const boxer = product.category === 'boxers';
   const pants = product.category === 'trousers' || (product.category === 'denim' && ['Jeans', 'Denim Shorts'].includes(product.type));
   const short = product.type === 'Denim Shorts' || boxer;
