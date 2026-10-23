@@ -37,5 +37,4 @@ export async function adminRequest(path, { method = 'GET', body, signal } = {}) 
   if (response.status !== 204 && !type.includes('application/json')) throw new Error('The API is unavailable. Check the backend connection.');
   return data;
 }
-import { apiUrl } from '../api/public.js';
 
