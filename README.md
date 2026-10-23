@@ -19,6 +19,10 @@ npm run build
 npm run preview
 ```
 
+### Backend API URL
+
+The frontend reads `VITE_API_BASE_URL` when Vite builds the site. Leave it empty locally to use the Vite development proxy (`http://127.0.0.1:4000`). For the Render Static Site, set `VITE_API_BASE_URL=https://roann-sourcing-backend.onrender.com` in that service's Environment settings and rebuild/deploy. Set `ALLOWED_ORIGINS=https://www.roannsourcing.com` on the backend Web Service (add `https://roannsourcing.com` too if that domain is used).
+
 ## Structure
 
 - `src/pages/` — homepage sections

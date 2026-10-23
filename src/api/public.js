@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+export const apiUrl = path => `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+export const mediaUrl = value => value && value.startsWith('/media/') ? apiUrl(value) : value;
+
 export async function publicRequest(path, options = {}) {
-  const response = await fetch(`/api/${path}`, {
+  const response = await fetch(apiUrl(`/api/${path}`), {
     ...options, cache: 'no-store',
     headers: { ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...options.headers },
   });
