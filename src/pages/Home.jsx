@@ -11,7 +11,7 @@ function Eyebrow({ children }) { return <p className="eyebrow">{children}</p>; }
 export default function Home() {
   const { data: content } = usePublicData('content');
   const homeSlides = content?.heroes.filter(item => item.page === 'home' && item.image_url) || [];
-  const slides = homeSlides.length ? homeSlides : [{ id: 'fallback', image_url: '/images/hero.jpg' }];
+  const slides = homeSlides;
   const [selected, setSelected] = useState(null);
   const dialog = useRef(null);
   useEffect(() => { if (selected) dialog.current?.showModal(); }, [selected]);

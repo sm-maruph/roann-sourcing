@@ -12,7 +12,7 @@ export default function HeroSlides({ slides }) {
     return () => window.clearInterval(timer);
   }, [paused, hovered, slides.length, index]);
   return <>
-    <div className="hero-slides" aria-hidden="true">{slides.map((slide, position) => <div key={slide.id} className={`hero-slide${position === active ? ' is-active' : ''}`} style={{ backgroundImage: `url("${slide.image_url}")` }}/>)}</div>
+    <div className="hero-slides" aria-hidden="true">{slides.length ? slides.map((slide, position) => <div key={slide.id} className={`hero-slide${position === active ? ' is-active' : ''}`} style={{ backgroundImage: `url("${slide.image_url}")` }}/>) : <div className="hero-slide is-active hero-image-loader"/>}</div>
     {slides.length > 1 && <div className="hero-slider-controls" role="group" aria-label="Homepage slideshow" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocus={() => setHovered(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setHovered(false); }}>
       <button aria-label="Previous slide" onClick={() => setIndex(value => (value - 1 + slides.length) % slides.length)}><ChevronLeft size={18}/></button>
       <div className="hero-slide-dots">{slides.map((slide, position) => <button key={slide.id} aria-label={`Show slide ${position + 1}`} aria-pressed={position === active} onClick={() => setIndex(position)}/>)}</div>

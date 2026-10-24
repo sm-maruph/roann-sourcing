@@ -1,0 +1,11 @@
+.content-image-box{position:relative;display:block;overflow:hidden;background:#eeefed;min-width:0;min-height:0}
+.content-image-box>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .2s ease}
+.content-image-box.is-loaded>img{opacity:1}
+.content-image-loader{position:absolute;inset:0;overflow:hidden;background:linear-gradient(100deg,#eeefed 20%,#f8f8f7 50%,#eeefed 80%);background-size:200% 100%;animation:content-image-shimmer 1.2s ease-in-out infinite}
+@keyframes content-image-shimmer{to{background-position-x:-200%}}
+.hero-image-loader{background:linear-gradient(100deg,#eeefed 20%,#f8f8f7 50%,#eeefed 80%);background-size:200% 100%;animation:content-image-shimmer 1.2s ease-in-out infinite}
+.image-zoom-viewer{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;padding:4vh 4vw;background:#101111eF;cursor:zoom-out}
+.image-zoom-viewer>img{display:block;width:auto;height:auto;max-width:92vw;max-height:92vh;object-fit:contain;box-shadow:0 12px 50px #0008}
+.image-zoom-close{position:absolute;top:18px;right:22px;width:44px;height:44px;border:1px solid #ffffff80;border-radius:50%;background:#1118;color:white;font-size:32px;line-height:1;cursor:pointer}
+@media(hover:hover){.product-photo{cursor:zoom-in}}
+@media(prefers-reduced-motion:reduce){.content-image-loader{animation:none}}
