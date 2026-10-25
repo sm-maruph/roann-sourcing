@@ -26,7 +26,7 @@ function Attributes({ value = {}, onChange, arrays }) {
   </div>;
 }
 
-export default function RecordEditor({ resourceKey, resource, record, categories, onClose, onSaved }) {
+export default function RecordEditor({ resourceKey, resource, record, categories, products = [], onClose, onSaved }) {
   const trackUpload = useUploadCleanup();
   const [values, setValues] = useState(() => resourcePayload(resource, record || {}));
   const [skuPreview, setSkuPreview] = useState({sku: '', loading: false, error: ''});
@@ -36,14 +36,14 @@ export default function RecordEditor({ resourceKey, resource, record, categories
   const dialog = useRef(null);
   useEffect(() => { dialog.current.showModal(); }, []);
   useEffect(() => {
-    if (resourceKey !== 'products' || record || !values.category_id) { setSkuPreview({sku:'',loading:false,error:''}); return; }
+    if (resourceKey !== 'products' || !values.category_id) { setSkuPreview({sku:'',loading:false,error:''}); return; }
     const controller = new AbortController();
     setSkuPreview({sku:'',loading:true,error:''});
     adminRequest(`admin/products/sku-preview?category_id=${encodeURIComponent(values.category_id)}`, {signal:controller.signal})
       .then(data => setSkuPreview({sku:data.sku,loading:false,error:''}))
       .catch(failure => { if(failure.name !== 'AbortError') setSkuPreview({sku:'',loading:false,error:failure.message}); });
     return () => controller.abort();
-  }, [resourceKey, record, values.category_id]);
+  }, [resourceKey, values.category_id]);
 
   const change = (key, value) => setValues(previous => setValue(previous, key, value));
 
@@ -65,12 +65,20 @@ export default function RecordEditor({ resourceKey, resource, record, categories
           const fixedParent = name === 'parent_id' && Boolean(record);
           const fixedRootSlug = name === 'slug' && record?.parent_id === null;
           const id = `admin-field-${name.replaceAll('.', '-')}`;
-          if (type === 'auto-sku') return <div className="admin-field" key={name}><label htmlFor={id}>SKU</label><input id={id} readOnly value={record?.sku || skuPreview.sku} placeholder={skuPreview.loading ? 'Generating SKU?' : 'Select a category and group first'} aria-describedby="sku-help"/><small id="sku-help">{record ? 'Existing SKU is preserved when editing.' : 'Generated automatically on save. The preview may advance if another product is saved first.'}</small>{skuPreview.error && <p className="admin-error" role="alert">{skuPreview.error}</p>}</div>;
+          if (type === 'auto-sku') {
+            const sku = values.sku || (record ? '' : skuPreview.sku);
+            const duplicate = products.some(product => product.id !== record?.id && product.sku?.trim().toLowerCase() === String(sku).trim().toLowerCase() && sku);
+            return <div className="admin-field" key={name}><label htmlFor={id}>SKU</label><input id={id} value={sku} maxLength={80} placeholder={skuPreview.loading ? 'Generating SKU…' : 'Select a category and group first'} onChange={event => change('sku', event.target.value)}/><small id="sku-help">Generated from the selected group. You can edit it.</small>{duplicate && <p className="admin-error" role="status">This SKU is already in use. Choose a different SKU.</p>}{skuPreview.error && <p className="admin-error" role="alert">{skuPreview.error}</p>}</div>;
+          }
           if (type === 'product-category') return <ProductCategoryPicker key={name} categories={categories} value={value} onChange={next => change(name, next)}/>;
           if (type === 'attributes') return <div className="admin-field" key={name}><span>{label}</span><Attributes value={value} arrays={arrays} onChange={next => change(name, next)}/></div>;
           if (type === 'checkbox') return <label className="admin-check" htmlFor={id} key={name}><input id={id} type="checkbox" checked={Boolean(value)} onChange={event => change(name, event.target.checked)}/>{label}</label>;
           const choices = type === 'category' ? categories.filter(category => category.level >= 2 || category.id === value).map(category => [category.id, categoryLabel(category, categories)])
             : type === 'parent' ? categories.filter(category => category.level < 3 || category.id === value).map(category => [category.id, categoryLabel(category, categories)]) : options;
+          if (resourceKey === 'products' && name === 'name') {
+            const duplicate = products.some(product => product.id !== record?.id && product.name?.trim().toLowerCase() === String(value || '').trim().toLowerCase() && value);
+            return <div className="admin-field" key={name}><label htmlFor={id}>{label}</label><input id={id} type={type} value={value ?? ''} {...attributes} onChange={event => change(name, event.target.value)}/>{duplicate && <p className="admin-error" role="status">A product with this name already exists.</p>}</div>;
+          }
           return <div className="admin-field" key={name}><label htmlFor={id}>{label}</label>
             {['select', 'category', 'parent'].includes(type) ? <select id={id} value={value || ''} disabled={fixedParent || (resourceKey === 'hero_banners' && Boolean(record) && name === 'page')} {...attributes} onChange={event => change(name, event.target.value)}>
               {type !== 'select' && <option value="">{record?.parent_id === null && name === 'parent_id' ? 'Top-level collection' : 'Choose a category'}</option>}
