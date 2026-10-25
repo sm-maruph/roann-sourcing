@@ -1,6 +1,6 @@
 import GarmentPreview from './GarmentPreview';
-export default function GirlsGarmentPreview({product}) {
+export default function GirlsGarmentPreview({product, zoomOnClick}) {
   const type = { Jacket:'Denim Jacket', Shorts:'Denim Shorts', 'Wide Leg':'Jeans', Graphic:'Crew Neck', Basic:'Crew Neck', Striped:'Crew Neck', Printed:'Crew Neck', 'Ruffle Sleeve':'Crew Neck', 'Cable Knit':'Crew Neck', Hooded:'Long Sleeve' }[product.type] || product.type;
   if (['Skirt','Dungaree'].includes(product.type)) return <svg className="garment-preview" viewBox="0 0 300 310" role="img" aria-label={`${product.name} design illustration`}><ellipse cx="150" cy="285" rx="80" ry="6" opacity=".06"/><path d={product.type === 'Skirt' ? 'M105 72H195L226 250Q150 263 74 250Z' : 'M112 32H125V80H175V32H188L191 124 211 268H160L150 178 140 268H89L109 124Z'} fill={product.color} stroke="#000" strokeOpacity=".25"/><g fill="none" stroke="#fff" strokeOpacity=".3" strokeWidth="2"><path d={product.type === 'Skirt' ? 'M105 87H195M150 87V250M106 96Q115 126 91 132M194 96Q185 126 209 132M81 237Q150 249 219 237' : 'M125 91H175V123H125ZM112 139H188M150 139V178M96 255H140M160 255H204'}/></g></svg>;
-  return <div className={`girls-illustration girls-illustration-${product.type.toLowerCase().replaceAll(' ','-')}`}><GarmentPreview product={{...product,type}}/>{product.type === 'Graphic' && <span className="girls-heart" aria-hidden="true">♥</span>}</div>;
+  return <div className={`girls-illustration girls-illustration-${product.type.toLowerCase().replaceAll(' ','-')}`}><GarmentPreview product={{...product,type}} zoomOnClick={zoomOnClick}/>{product.type === 'Graphic' && <span className="girls-heart" aria-hidden="true">♥</span>}</div>;
 }

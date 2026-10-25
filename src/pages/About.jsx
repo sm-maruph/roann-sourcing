@@ -8,9 +8,10 @@ import { strengths, values } from '../data/about';
 import '../styles/about.css';
 
 const images = {
-  sewing: { src: '/images/mens/sweater.jpg', alt: 'A knitted garment displayed on a hanger' },
+  sewing: { src: '/images/sewing.jpg', alt: 'A garment being stitched on a sewing machine' },
   apparel: { src: '/images/hero.jpg', alt: 'A carefully selected collection of apparel on a clothing rail' },
   fabric: { src: '/images/textile.jpg', alt: 'Thread, scissors and measuring tape for apparel development' },
+  export: { src: '/images/export.webp', alt: 'Shipping containers ready for export by cargo ship' },
   studio: { src: '/images/fabric.jpg', alt: 'A collection of garments arranged on hangers' },
   team: { src: '/images/mens/denim.jpg', alt: 'Folded denim garments showing fabric and construction details' },
 };
@@ -75,8 +76,8 @@ export default function About() {
 
     <section className="about-story about-section" id="our-story">
       <div className="container about-content-grid">
-        <div className="section-copy"><p className="eyebrow">Our Story</p><h2>A Journey Built on Trust<br/>and Collaboration</h2><p>Founded with a simple belief — better fashion is possible through stronger partnerships. ROANN SOURCING brings together global brands and experienced manufacturers to create high-quality apparel that people love to wear.</p><LinkButton href="#our-people" outline>Our Story</LinkButton></div>
-        <AboutGallery images={[images.studio, images.fabric, images.apparel]}/>
+        <div className="section-copy"><p className="eyebrow">Our Story</p><h2>A Journey Built on Partnership<br/>and Collaboration</h2><p>Founded with a simple belief — better fashion is possible through stronger partnerships. ROANN SOURCING brings together global brands and experienced manufacturers to create high-quality apparel that people love to wear.</p><LinkButton href="#our-people" outline>Our Story</LinkButton></div>
+        <AboutGallery images={[images.fabric, images.sewing, images.apparel, images.export]}/>
       </div>
     </section>
 
