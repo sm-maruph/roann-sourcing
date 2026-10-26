@@ -42,6 +42,7 @@ export default function CategoryManager() {
   const [addingRoot, setAddingRoot] = useState(false);
   const [addingGroup, setAddingGroup] = useState(false);
   const [deleting, setDeleting] = useState(null);
+  const [draggedId, setDraggedId] = useState(null);
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
@@ -68,6 +69,26 @@ export default function CategoryManager() {
     } catch (failure) { setError(failure.message); return false; }
     finally { setBusy(false); }
   }
+  async function reorder(parentId, dragged, target) {
+    if (dragged === target || busy) return;
+    const siblings = rows.filter(row => (row.parent_id || null) === parentId);
+    const from = siblings.findIndex(row => row.id === dragged);
+    const to = siblings.findIndex(row => row.id === target);
+    if (from < 0 || to < 0) return;
+    const [moving] = siblings.splice(from, 1);
+    siblings.splice(to, 0, moving);
+    const updates = new Map(siblings.map((row, index) => [row.id, {...row, sort_order: index}]));
+    setRows(previous => previous.map(row => updates.get(row.id) || row));
+    setBusy(true); setError(''); setNotice('');
+    try {
+      await Promise.all([...updates.values()].map(row => adminRequest(`admin/categories/${row.id}`, { method: 'PUT', body: resourcePayload(resources.categories, row) })));
+      setNotice('Display order saved.');
+      setRevision(value => value + 1);
+    } catch (failure) {
+      setError(failure.message);
+      setRevision(value => value + 1);
+    } finally { setBusy(false); setDraggedId(null); }
+  }
   async function remove() {
     setBusy(true); setError('');
     try {
@@ -86,13 +107,13 @@ export default function CategoryManager() {
       <nav className="category-list" aria-label="Categories">{roots.map((root, index) => {
         const children = rows.filter(row => row.parent_id === root.id);
         const count = rows.filter(row => children.some(child => child.id === row.parent_id)).length;
-        return <button key={root.id} disabled={busy} aria-current={selectedId === root.id ? 'true' : undefined} onClick={() => { setSelectedId(root.id); setAddingGroup(false); setError(''); }} style={{ '--category-color': colors[index % colors.length] }}><i className="category-swatch"/><span><strong>{root.name}</strong><small>{children.length} groups · {count} subcategories{!root.is_active && ' · Hidden'}</small></span>{selectedId === root.id && <i className="category-selected-dot"/>}</button>;
+        return <button key={root.id} disabled={busy} draggable={!busy} onDragStart={event => { event.dataTransfer.setData('text/plain', root.id); event.dataTransfer.effectAllowed = 'move'; setDraggedId(root.id); }} onDragEnd={() => setDraggedId(null)} onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); const id = event.dataTransfer.getData('text/plain'); void reorder(null, id || draggedId, root.id); }} className={draggedId === root.id ? 'is-dragging' : ''} aria-current={selectedId === root.id ? 'true' : undefined} onClick={() => { setSelectedId(root.id); setAddingGroup(false); setError(''); }} style={{ '--category-color': colors[index % colors.length] }} title="Drag to reorder"><i className="category-swatch"/><span><strong>{root.name}</strong><small>{children.length} groups · {count} subcategories{!root.is_active && ' · Hidden'}</small></span>{selectedId === root.id && <i className="category-selected-dot"/>}</button>;
       })}{!roots.length && <p>No categories yet. Add your first category.</p>}</nav>
       <div className="category-detail">{selected && <>
         <div className="category-summary" style={{ '--category-color': color }}><i className="category-swatch"/><div><h2>{selected.name}</h2><p>/{selected.slug}{!selected.is_active && ' · Hidden'}</p></div><div className="category-summary-actions"><button disabled={busy} onClick={() => setEditor(selected)}><Pencil size={14}/>Edit</button><button disabled={busy} className="category-delete" onClick={() => setDeleting(selected)}><Trash2 size={14}/>Delete</button></div></div>
-        {groups.map(group => <article className="category-group" key={group.id}>
-          <header><button className="category-group-title" disabled={busy} onClick={() => setEditor(group)}>{group.name}{!group.is_active && <small>Hidden</small>}</button><button className="category-icon-button" disabled={busy} aria-label={`Delete group ${group.name}`} onClick={() => setDeleting(group)}><Trash2 size={15}/></button></header>
-          <div className="category-chips">{rows.filter(row => row.parent_id === group.id).map(child => <span className="category-chip" key={child.id}><button disabled={busy} onClick={() => setEditor(child)}>{child.name}{!child.is_active && ' (hidden)'}</button><button disabled={busy} aria-label={`Delete subcategory ${child.name}`} onClick={() => setDeleting(child)}><X size={12}/></button></span>)}</div>
+        {groups.map(group => <article className={`category-group${draggedId === group.id ? ' is-dragging' : ''}`} key={group.id}>
+          <header onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); const id = event.dataTransfer.getData('text/plain'); void reorder(selectedId, id || draggedId, group.id); }}><button className="category-group-title" disabled={busy} draggable={!busy} onDragStart={event => { event.dataTransfer.setData('text/plain', group.id); event.dataTransfer.effectAllowed = 'move'; setDraggedId(group.id); }} onDragEnd={() => setDraggedId(null)} onClick={() => setEditor(group)} title="Drag to reorder">{group.name}{!group.is_active && <small>Hidden</small>}</button><button className="category-icon-button" disabled={busy} aria-label={`Delete group ${group.name}`} onClick={() => setDeleting(group)}><Trash2 size={15}/></button></header>
+          <div className="category-chips">{rows.filter(row => row.parent_id === group.id).map(child => <span className={`category-chip${draggedId === child.id ? ' is-dragging' : ''}`} key={child.id} draggable={!busy} onDragStart={event => { event.dataTransfer.setData('text/plain', child.id); event.dataTransfer.effectAllowed = 'move'; setDraggedId(child.id); }} onDragEnd={() => setDraggedId(null)} onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); const id = event.dataTransfer.getData('text/plain'); void reorder(group.id, id || draggedId, child.id); }} title="Drag to reorder"><button disabled={busy} onClick={() => setEditor(child)}>{child.name}{!child.is_active && ' (hidden)'}</button><button disabled={busy} aria-label={`Delete subcategory ${child.name}`} onClick={() => setDeleting(child)}><X size={12}/></button></span>)}</div>
           <QuickAdd label={`Add subcategory to ${group.name}`} busy={busy || loading} onAdd={name => create(name, group.id)}/>
         </article>)}
         {!groups.length && <p className="category-empty">Add a group to organize products and subcategories.</p>}
