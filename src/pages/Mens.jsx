@@ -12,10 +12,15 @@ function categoryFromUrl(categories) {
   const id = new URLSearchParams(window.location.search).get('category');
   return categories.some(category => category.id === id) ? id : categories[0]?.id;
 }
+function filtersFromUrl(categories, categoryId) {
+  const subcategoryId = new URLSearchParams(window.location.search).get('subcategory');
+  const subcategory = categories.find(category => category.id === categoryId)?.subcategories?.find(item => item.id === subcategoryId);
+  return subcategory ? { Subcategory: [subcategory.label] } : {};
+}
 
 function Catalog({ categories = mensCategories, catalogProducts = mensProducts, basePath = '/mens', audience = 'Men’s', Preview = GarmentPreview, women = false, girls = false }) {
   const [categoryId, setCategoryId] = useState(() => categoryFromUrl(categories));
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState(() => filtersFromUrl(categories, categoryFromUrl(categories)));
   const [sort, setSort] = useState('featured');
   const [page, setPage] = useState(() => {
     const productId = new URLSearchParams(window.location.search).get('product');
@@ -34,13 +39,24 @@ function Catalog({ categories = mensCategories, catalogProducts = mensProducts, 
   const imageDialog = useRef(null);
   const category = categories.find(item => item.id === categoryId);
   useEffect(() => {
-    const onPopState = () => { setCategoryId(categoryFromUrl(categories)); setFilters({}); setSort('featured'); setPage(1); };
+    const onPopState = () => { const nextCategory = categoryFromUrl(categories); setCategoryId(nextCategory); setFilters(filtersFromUrl(categories, nextCategory)); setSort('featured'); setPage(1); };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, [categories]);
   useEffect(() => { document.title = `${audience} ${category.title} | Roann Sourcing`; }, [category.title, audience]);
   useEffect(() => { if (quote) { setSubmitted(false); setQuoteError(''); quoteDialog.current?.showModal(); } }, [quote]);
   useEffect(() => { if (viewing) { setImageZoom(1); imageDialog.current?.showModal(); } }, [viewing]);
+  useEffect(() => {
+    if (!viewing) return;
+    const scrollY = window.scrollY;
+    const bodyStyle = document.body.style;
+    const previous = {position: bodyStyle.position, top: bodyStyle.top, left: bodyStyle.left, right: bodyStyle.right, width: bodyStyle.width, overflow: bodyStyle.overflow};
+    bodyStyle.position = 'fixed'; bodyStyle.top = `-${scrollY}px`; bodyStyle.left = '0'; bodyStyle.right = '0'; bodyStyle.width = '100%'; bodyStyle.overflow = 'hidden';
+    return () => {
+      Object.assign(bodyStyle, previous);
+      window.scrollTo(0, scrollY);
+    };
+  }, [viewing]);
 
   function changeCategory(event, id) {
     if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;

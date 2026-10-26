@@ -22,6 +22,10 @@
 .nav-subcategories a { display: block; padding: 11px 12px; white-space: nowrap; font-size: 13px; }
 .nav-subcategories a:hover, .nav-subcategories a:focus-visible { background: #222; color: var(--red); }
 .nav-category.is-expanded > .nav-subcategories { display: block; }
+.nav-subcategories > li { position: relative; }
+.nav-subcategory-children { position: absolute; top: 0; left: 100%; min-width: 180px; margin: 0; padding: 8px; list-style: none; background: #111; border: 1px solid #333; box-shadow: 0 12px 24px #0005; display: none; }
+.nav-subcategories > li:hover > .nav-subcategory-children,
+.nav-subcategories > li:focus-within > .nav-subcategory-children { display: block; }
 @media (max-width: 1200px) {
   .header-inner .logo { margin-right: auto; }
   .header-inner .search-toggle { margin-left: 0; }
@@ -42,5 +46,6 @@
   .nav-category-heading > a { flex: 1; padding: 12px 0; font-size: 14px; }
   .nav-category-toggle { width: 40px; height: 40px; }
   .nav-subcategories { position: static; box-shadow: none; min-width: 0; margin-bottom: 8px; }
+  .nav-subcategory-children { position: static; display: block; min-width: 0; margin-left: 12px; padding: 0 0 0 8px; border: 0; border-left: 1px solid #333; box-shadow: none; }
   .navigation.is-open { max-height: calc(100dvh - 73px); overflow-y: auto; }
 }

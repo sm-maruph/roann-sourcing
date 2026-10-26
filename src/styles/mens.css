@@ -37,3 +37,4 @@
 @media(max-width:560px){.mens-product-image .image-view-button{opacity:.58;background:#1119;border-color:#ffffffa6}.mens-product-image .image-view-button:active,.mens-product-image .image-view-button:focus-visible{opacity:1}}
 
 @media(min-width:561px){.mens-product-image .image-view-button,.mens-product-image:hover .image-view-button,.mens-product-image:focus-within .image-view-button{top:9px;right:9px;left:auto;transform:none;width:34px;height:34px;min-height:34px;padding:7px;justify-content:center;border-radius:50%}.mens-product-image .image-view-button span{display:none}}
+.product-image-dialog,.product-image-stage{overscroll-behavior:contain}
