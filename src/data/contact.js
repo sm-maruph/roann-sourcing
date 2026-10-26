@@ -1,4 +1,5 @@
-export const contactEmail = 'info@roann-sourcing.com';
+export const contactEmail = 'nazim@roannsourcing.com';
+export const contactAddress = 'House: 42 (2nd Floor), Road: 17, Sector: 13, Uttara, Dhaka-1230, Bangladesh.';
 
 export function createContactEmail(values) {
   const singleLine = value => String(value || '').replace(/[\r\n]+/g, ' ').trim();
