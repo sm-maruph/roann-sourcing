@@ -53,7 +53,7 @@ export default function About() {
     <section className="about-ceo" aria-labelledby="ceo-message-title">
       <div className="container">
         <h2 id="ceo-message-title">Message from<span>CEO</span></h2>
-        <img className="ceo-portrait" src="/images/CEO_RS.jpeg" alt="Nazim Akter, CEO of Roann Sourcing" width="446" height="644" loading="lazy"/>
+        <img className="ceo-portrait" src="/images/Professional%20CEO%20Portrait%20on%20Charcoal%20Black.png" alt="Nazim Akter, CEO of Roann Sourcing" loading="lazy"/>
         <figure className="ceo-message">
           <figcaption>Nazim Akter<span className="ceo-role">CEO, Roann Sourcing</span></figcaption>
           <blockquote><p>“Every garment carries a promise—to the brand that imagines it, the people who make it, and the person who wears it. At Roann Sourcing, we honor that promise, from the first conversation to the final stitch.”</p></blockquote>
