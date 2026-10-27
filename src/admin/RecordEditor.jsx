@@ -12,10 +12,10 @@ function Attributes({ value = {}, onChange, arrays }) {
     <p>Use a group such as Fabric or Fit. Separate multiple values with commas.</p>
     {entries.map(([key, values], index) => <div className="admin-attribute-row" key={index}>
       <input aria-label={`Attribute ${index + 1}`} value={key} maxLength={60} required onChange={event => update(index, event.target.value, values)}/>
-      <input aria-label={`Values ${index + 1}`} value={Array.isArray(values) ? values.join(', ') : values} maxLength={1000} onChange={event => {
+      {arrays ? <textarea aria-label={`Options for ${key}`} rows={Math.max(3, Array.isArray(values) ? values.length : 3)} value={Array.isArray(values) ? values.join('\n') : values} maxLength={4000} placeholder="One option per line" onChange={event => update(index, key, event.target.value.split('\n').map(option => option.trim()).filter(Boolean))}/> : <input aria-label={`Values ${index + 1}`} value={Array.isArray(values) ? values.join(', ') : values} maxLength={1000} onChange={event => {
         const parts = event.target.value.split(',');
-        update(index, key, arrays || parts.length > 1 ? parts : event.target.value);
-      }}/>
+        update(index, key, parts.length > 1 ? parts : event.target.value);
+      }}/>}
       <button type="button" onClick={() => onChange(Object.fromEntries(entries.filter((_, i) => i !== index)))}>Remove</button>
     </div>)}
     <button type="button" onClick={() => {
@@ -24,6 +24,23 @@ function Attributes({ value = {}, onChange, arrays }) {
       onChange({ ...value, [`Group ${index}`]: arrays ? [] : '' });
     }}>Add attribute</button>
   </div>;
+}
+
+function ProductFilterOptions({ categories, categoryId, value = {}, onChange }) {
+  const assigned = categories.find(row => row.id === categoryId);
+  const group = assigned?.level === 3 ? categories.find(row => row.id === assigned.parent_id) : assigned;
+  const filters = group?.config?.filters || {};
+  const filterNames = Object.keys(filters);
+  if (!filterNames.length) return <div className="admin-field"><span>Product attributes</span><Attributes value={value} onChange={onChange}/><small>Add filter groups and options in Categories &amp; subcategories.</small></div>;
+  const extra = Object.fromEntries(Object.entries(value).filter(([key]) => !filterNames.includes(key)));
+  const setValues = (name, options) => onChange({...extra, ...Object.fromEntries(filterNames.map(key => [key, key === name ? options : value[key] || []]))});
+  return <div className="admin-field"><span>Product filters</span><div className="admin-attributes">
+    {filterNames.map(name => <fieldset key={name} className="admin-product-filter-options"><legend>{name}</legend>{filters[name].map(option => <label className="admin-check" key={option}><input type="checkbox" checked={(Array.isArray(value[name]) ? value[name] : value[name] ? [value[name]] : []).includes(option)} onChange={event => {
+      const selected = Array.isArray(value[name]) ? value[name] : value[name] ? [value[name]] : [];
+      setValues(name, event.target.checked ? [...selected, option] : selected.filter(item => item !== option));
+    }}/>{option}</label>)}</fieldset>)}
+    {Object.keys(extra).length > 0 && <><p>Additional product details</p><Attributes value={extra} onChange={next => onChange({...Object.fromEntries(filterNames.map(key => [key, value[key] || []])), ...next})}/></>}
+  </div></div>;
 }
 
 export default function RecordEditor({ resourceKey, resource, record, categories, products = [], onClose, onSaved }) {
@@ -71,6 +88,7 @@ export default function RecordEditor({ resourceKey, resource, record, categories
             return <div className="admin-field" key={name}><label htmlFor={id}>SKU</label><input id={id} value={sku} maxLength={80} placeholder={skuPreview.loading ? 'Generating SKU…' : 'Select a category and group first'} onChange={event => change('sku', event.target.value)}/><small id="sku-help">Generated from the selected group. You can edit it.</small>{duplicate && <p className="admin-error" role="status">This SKU is already in use. Choose a different SKU.</p>}{skuPreview.error && <p className="admin-error" role="alert">{skuPreview.error}</p>}</div>;
           }
           if (type === 'product-category') return <ProductCategoryPicker key={name} categories={categories} value={value} onChange={next => change(name, next)}/>;
+          if (type === 'attributes' && resourceKey === 'products') return <ProductFilterOptions key={name} categories={categories} categoryId={values.category_id} value={value} onChange={next => change(name, next)}/>;
           if (type === 'attributes') return <div className="admin-field" key={name}><span>{label}</span><Attributes value={value} arrays={arrays} onChange={next => change(name, next)}/></div>;
           if (type === 'checkbox') return <label className="admin-check" htmlFor={id} key={name}><input id={id} type="checkbox" checked={Boolean(value)} onChange={event => change(name, event.target.checked)}/>{label}</label>;
           const choices = type === 'category' ? categories.filter(category => category.level >= 2 || category.id === value).map(category => [category.id, categoryLabel(category, categories)])

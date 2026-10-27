@@ -66,6 +66,8 @@
 .admin-editor-actions { display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #eee; padding-top: 20px; }
 .admin-attributes { border: 1px solid #e0e4ea; padding: 12px; border-radius: 5px; margin-top: 6px; }
 .admin-attributes p { font-weight: 400; font-size: 12px; }
+.admin-product-filter-options { border: 0; padding: 0; margin: 0 0 14px; }
+.admin-product-filter-options legend { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
 .admin-attribute-row { display: grid; grid-template-columns: 1fr 1.5fr auto; gap: 7px; align-items: end; margin-bottom: 9px; }
 .admin-media-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .admin-media-grid .admin-card { min-width: 0; margin: 0; }
